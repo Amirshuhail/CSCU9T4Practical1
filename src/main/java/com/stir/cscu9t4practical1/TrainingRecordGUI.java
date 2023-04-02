@@ -25,8 +25,10 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
     private JLabel labmm = new JLabel(" Mins:");
     private JLabel labs = new JLabel(" Secs:");
     private JLabel labdist = new JLabel(" Distance (km):");
-    private JButton addR = new JButton("Add");
+     private JButton addR = new JButton("Add");
     private JButton lookUpByDate = new JButton("Look Up");
+    private JButton findAllByDate = new JButton("Find All By Date");
+    private JButton remove = new JButton("Remove");
 
     private TrainingRecord myAthletes = new TrainingRecord();
 
@@ -64,20 +66,28 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         add(labdist);
         add(dist);
         dist.setEditable(true);
+            
         add(addR);
         addR.addActionListener(this);
         add(lookUpByDate);
         lookUpByDate.addActionListener(this);
+        add(findAllByDate);
+        
+        findAllByDate.addActionListener(this);
+        add(remove);
+        remove.addActionListener(this);
         add(outputArea);
         outputArea.setEditable(false);
+
         setSize(720, 200);
         setVisible(true);
         blankDisplay();
+    }
 
         // To save typing in new entries while testing, uncomment
         // the following lines (or add your own test cases)
         
-    } // constructor
+     // constructor
 
     // listen for and respond to GUI events 
     public void actionPerformed(ActionEvent event) {
@@ -87,6 +97,12 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         }
         if (event.getSource() == lookUpByDate) {
             message = lookupEntry();
+        }
+        if (event.getSource() == findAllByDate) {
+            message = findAllByDate();
+        }
+        if (event.getSource() == remove) {
+            message = remove();
         }
         outputArea.setText(message);
         blankDisplay();
@@ -116,7 +132,41 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         String message = myAthletes.lookupEntry(d, m, y);
         return message;
     }
-
+    public String findAllByDate() {
+        String message;
+        try {  
+            int m = Integer.parseInt(month.getText());
+            int d = Integer.parseInt(day.getText());
+            int y = Integer.parseInt(year.getText());
+            outputArea.setText("Not implemented yet ...");
+            message = myAthletes.findAllByDate(d, m, y);
+        } catch (NumberFormatException nfe) {
+            System.err.println("Wrong input");
+            JOptionPane.showMessageDialog(null, "Wrong number format or empty cells.\nPlease enter data again");
+            message = "Input error. Insert data again";
+        }
+        if (message.isEmpty()) {
+            message = "Input error. Insert data again";
+        }
+        return message;
+    }
+    public String remove() {
+        String s = name.getText();
+        String message;
+        try {
+            int m = Integer.parseInt(month.getText());
+            int d = Integer.parseInt(day.getText());
+            int y = Integer.parseInt(year.getText());
+            myAthletes.remove(s, d, m, y);
+            message = "Entry removed";
+        } catch (NumberFormatException nfe) {
+            System.err.println("Wrong input");
+            JOptionPane.showMessageDialog(null, "Wrong number format or empty cells.\nPlease enter data again");
+            message = "Input error. Insert data again";
+        }
+        return message;
+    }
+    
     public void blankDisplay() {
         name.setText("");
         day.setText("");
